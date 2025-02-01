@@ -8,30 +8,47 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  password  String
-  createdAt DateTime  @default(now())
-  posts     Post[]
-  comments  Comment[]
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+
+  posts    Post[]
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  title     String
-  content   String
-  authorId  Int
-  author    User      @relation(fields: [authorId], references: [id])
-  createdAt DateTime  @default(now())
-  comments  Comment[]
+  id      Int    @id @default(autoincrement())
+  title   String
+  content String
+
+  authorId Int
+  author   User @relation(fields: [authorId], references: [id])
+
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  postId    Int
-  authorId  Int
-  post      Post     @relation(fields: [postId], references: [id])
-  author    User     @relation(fields: [authorId], references: [id])
+  id         Int       @id @default(autoincrement())
+  message    String
+  likeAmount Int       @default(0)
+  // likes    TitleCommentLike[]
+  // dislikes TitleCommentDislike[]
+  parent     Comment?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
+  children   Comment[] @relation("ParentChild")
+  parentId   Int?
+
+  Post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int
+
+  User   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
