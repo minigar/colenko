@@ -34,14 +34,13 @@ model Post {
 }
 
 model Comment {
-  id         Int       @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
   message    String
-  likeAmount Int       @default(0)
-  // likes    TitleCommentLike[]
-  // dislikes TitleCommentDislike[]
-  parent     Comment?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
-  children   Comment[] @relation("ParentChild")
-  parentId   Int?
+  likeAmount Int    @default(0)
+
+  parent   Comment?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
+  children Comment[] @relation("ParentChild")
+  parentId Int?
 
   Post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId Int
